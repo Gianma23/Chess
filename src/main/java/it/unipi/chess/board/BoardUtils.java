@@ -5,14 +5,10 @@ public class BoardUtils {
     public static final int NUM_TILES = 64;
     public static final int NUM_TILES_ROW = 8;
     
-    public static final boolean[] FIRST_COLUMN = initColumn(0);
-    public static final boolean[] SECOND_COLUMN = initColumn(1);
-    public static final boolean[] SEVENTH_COLUMN = initColumn(6);
-    public static final boolean[] EIGHTH_COLUMN = initColumn(7);
-    
     private BoardUtils() {
         throw new RuntimeException("Non puoi istanziare la classe BoardUtils");
     }
+    
     private static boolean[] initColumn(int columnNumber) {
         final boolean[] column = new boolean[NUM_TILES];
         
@@ -20,5 +16,25 @@ public class BoardUtils {
             column[columnNumber] = true;
         }
         return column;
+    }
+    
+    public static boolean isValidTile (final int coord) {
+        return coord >= 0 && coord < 64;
+    }
+    
+    public static boolean isFirstColumn (final int coord) {
+        return coord % NUM_TILES_ROW == 0;
+    }
+    
+    public static boolean isSecondColumn (final int coord) {
+        return coord % NUM_TILES_ROW == 1;
+    }
+    
+    public static boolean isSeventhColumn (final int coord) {
+        return coord % NUM_TILES_ROW == 6;
+    }   
+    
+    public static boolean isEighthColumn (final int coord) {
+        return coord % NUM_TILES_ROW == 7;
     }
 }

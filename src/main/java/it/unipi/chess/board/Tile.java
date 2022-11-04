@@ -1,7 +1,6 @@
 package it.unipi.chess.board;
 
-import it.unipi.chess.pieces.Piece;
-import java.util.Map;
+import it.unipi.chess.pieces.*;
 public abstract class Tile {
     
     protected final int coordinate;
@@ -24,6 +23,11 @@ public abstract class Tile {
         }
         
         @Override
+        public String toString() {
+            return "-";
+        }
+        
+        @Override
         public boolean isOccupied() {
             return false;
         }
@@ -41,6 +45,11 @@ public abstract class Tile {
         private OccupiedTile(final int coord, final Piece p) {
             super(coord);
             piece = p;
+        }
+        
+        @Override
+        public String toString() {
+            return this.getPiece().getType().toString();
         }
         
         @Override
