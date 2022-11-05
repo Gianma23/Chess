@@ -2,6 +2,7 @@ package it.unipi.chess.board;
 
 import it.unipi.chess.Color;
 import it.unipi.chess.Move;
+import it.unipi.chess.board.player.*;
 import it.unipi.chess.pieces.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,33 +12,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Board {
+public final class Board {
     
     private final Map<Integer, Piece> boardConfig;
     private final List<Tile> gameBoard;
     private final List<Piece> whiteSet;
     private final List<Piece> blackSet;
-    private Color nextMoveColor;
+    private final WhitePlayer whitePlayer;
+    private final BlackPlayer blackPlayer;
+    private final Color nextMoveColor;
     
     public Board() {
         boardConfig = new HashMap<>();
         setBoardConfig();
         gameBoard = setGameBoard();
-        whiteSet = setActivePiece(Color.WHITE);
-        blackSet = setActivePiece(Color.BLACK);
+        whiteSet = getPieceSet(Color.WHITE);
+        blackSet = getPieceSet(Color.BLACK);
+        
+        final List<Move> whitePossibleMoves = getSetPossibleMoves(whiteSet);
+        final List<Move> blackPossibleMoves = getSetPossibleMoves(blackSet);
+        whitePlayer = new WhitePlayer(this, whitePossibleMoves, blackPossibleMoves);
+        blackPlayer = new BlackPlayer(this, blackPossibleMoves, whitePossibleMoves);
         nextMoveColor = Color.WHITE;
-    }
-     
-    @Override 
-    public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        for(int i = 0; i < BoardUtils.NUM_TILES; i++) {
-            final String tileText = gameBoard.get(i).toString();
-            builder.append(String.format("%3s", tileText));
-            if((i+1) % BoardUtils.NUM_TILES_ROW == 0)
-                builder.append("\n");
-        }
-        return builder.toString();
     }
      
     private void setBoardConfig() {
@@ -85,25 +81,17 @@ public class Board {
         return Collections.unmodifiableList(Arrays.asList(tiles));
     }
     
-    private List<Piece> setActivePiece(final Color color) {
+    private List<Piece> getPieceSet(final Color color) {
         final List<Piece> activePieces = new ArrayList<>();
         
         for(final Tile tile : gameBoard) 
-            if(tile.isOccupied() && tile.getPiece().getPieceColor() == color)
+            if(tile.isOccupied() && tile.getPiece().getColor() == color)
                 activePieces.add(tile.getPiece());
             
         return Collections.unmodifiableList(activePieces);
     }
-        
-    private void setPiece(final Piece piece) {
-        boardConfig.put(piece.getPiecePosition(), piece);
-    }
-
-    private void setNextMoveColor(final Color nmc) {
-        nextMoveColor = nmc;
-    }
-
-    public List<Move> getSetPossibleMoves(List<Piece> PieceSet) {
+    
+    private List<Move> getSetPossibleMoves(final List<Piece> PieceSet) {
         final List<Move> possibleMoves = new ArrayList<>();
         
         for(final Piece piece : PieceSet) 
@@ -111,8 +99,48 @@ public class Board {
         
         return Collections.unmodifiableList(possibleMoves);
     }
+        
+    private void setPiece(final Piece piece) {
+        boardConfig.put(piece.getPosition(), piece);
+    }
+
+    private Color getNextMoveColor(final Color nmc) {
+        return nextMoveColor;
+    }
+    
+    public List<Piece> getWhiteSet() {
+        return whiteSet;
+    }
+    
+    public List<Piece> getBlackSet() {
+        return blackSet;
+    }
+    
+    public WhitePlayer getWhitePlayer() {
+        return whitePlayer;
+    }
+
+    public BlackPlayer getBlackPlayer() {
+        return blackPlayer;
+    }
+    
+    public Player getCurrentPlayer() {
+        return nextMoveColor == Color.WHITE ? whitePlayer : blackPlayer;
+    }
     
     public Tile getTile(final int coord) {
-        return null;
+        return gameBoard.get(coord);
+    }  
+    
+    @Override 
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        for(int i = 0; i < BoardUtils.NUM_TILES; i++) {
+            final String tileText = gameBoard.get(i).toString();
+            builder.append(String.format("%3s", tileText));
+            if((i+1) % BoardUtils.NUM_TILES_ROW == 0)
+                builder.append("\n");
+        }
+        return builder.toString();
     }
 }

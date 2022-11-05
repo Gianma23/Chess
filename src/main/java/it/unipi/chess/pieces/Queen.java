@@ -12,17 +12,13 @@ import java.util.List;
 
 
 public class Queen extends Piece {
-    
-    private final static PieceType type = PieceType.QUEEN;  
+     
     private final static int[] CANDIDATE_MOVE_VECTOR = {-9, -8, -7, -1, 1, 8, 7, 9};
     
     public Queen(final int pos, final Color col) {
-        super(pos, col);
+        super(PieceType.QUEEN, pos, col);
     }
     
-    public PieceType getType() {
-        return type;
-    }
     
     @Override
     public List<Move> getPossibleMoves(final Board board) {
@@ -41,7 +37,7 @@ public class Queen extends Piece {
                     possibleMoves.add(new Move.NoCaptureMove(board, this, candidateMove));
                 } else {
                     final Piece pieceAtDest = validMoveTile.getPiece();
-                    final Color pieceAtDestColor = pieceAtDest.getPieceColor();
+                    final Color pieceAtDestColor = pieceAtDest.getColor();
                     
                     if(this.color != pieceAtDestColor)
                         possibleMoves.add(new Move.CaptureMove(board, this, candidateMove, pieceAtDest));

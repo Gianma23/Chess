@@ -12,11 +12,10 @@ import java.util.List;
 
 public class Rook extends Piece {
     
-    private final static PieceType type = PieceType.ROOK;
     private final static int[] CANDIDATE_MOVE_VECTOR = {-8, -1, 1, 8};
     
     public Rook(final int pos, final Color col) {
-        super(pos, col);
+        super(PieceType.ROOK, pos, col);
     }
     
     public PieceType getType() {
@@ -40,7 +39,7 @@ public class Rook extends Piece {
                     possibleMoves.add(new Move.NoCaptureMove(board, this, candidateMove));
                 } else {
                     final Piece pieceAtDest = validMoveTile.getPiece();
-                    final Color pieceAtDestColor = pieceAtDest.getPieceColor();
+                    final Color pieceAtDestColor = pieceAtDest.getColor();
                     
                     if(this.color != pieceAtDestColor)
                         possibleMoves.add(new Move.CaptureMove(board, this, candidateMove, pieceAtDest));

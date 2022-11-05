@@ -13,6 +13,6 @@ public class Gui {
         
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         this.gameFrame.setVisible(true);
-        
+
     }
 }

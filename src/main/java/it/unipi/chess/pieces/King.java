@@ -16,11 +16,10 @@ import java.util.List;
  */
 public class King extends Piece {
     
-    private final static PieceType type = PieceType.KING;      
     private final static int[] CANDIDATE_MOVE_COORD = {-9, -8, -7, -1, 1, 7, 8, 9};
     
     public King(final int pos, final Color col) {
-        super(pos, col);
+        super(PieceType.KING, pos, col);
     }
 
     public PieceType getType() {
@@ -44,7 +43,7 @@ public class King extends Piece {
                     possibleMoves.add(new Move.NoCaptureMove(board, this, candidateMove));
                 } else {
                     final Piece pieceAtDest = validMoveTile.getPiece();
-                    final Color pieceAtDestColor = pieceAtDest.getPieceColor();
+                    final Color pieceAtDestColor = pieceAtDest.getColor();
                     
                     if(this.color != pieceAtDestColor)
                         possibleMoves.add(new Move.CaptureMove(board, this, candidateMove, pieceAtDest));

@@ -16,7 +16,7 @@ public class Bishop extends Piece {
     private final static int[] CANDIDATE_MOVE_VECTOR = {-9, -7, 7, 9};
     
     public Bishop(final int pos, final Color col) {
-        super(pos, col);
+        super(PieceType.BISHOP, pos, col);
     }
     
     public PieceType getType() {
@@ -40,7 +40,7 @@ public class Bishop extends Piece {
                     possibleMoves.add(new Move.NoCaptureMove(board, this, candidateMove));
                 } else {
                     final Piece pieceAtDest = validMoveTile.getPiece();
-                    final Color pieceAtDestColor = pieceAtDest.getPieceColor();
+                    final Color pieceAtDestColor = pieceAtDest.getColor();
                     
                     if(this.color != pieceAtDestColor)
                         possibleMoves.add(new Move.CaptureMove(board, this, candidateMove, pieceAtDest));

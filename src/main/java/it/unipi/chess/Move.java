@@ -15,12 +15,18 @@ public abstract class Move {
         destCoordinate = dc;
     }
     
+    public abstract Board execute();
+    
     public static final class NoCaptureMove extends Move {
 
         public NoCaptureMove(Board b, Piece mp, int dc) {
             super(b, mp, dc);
+        }  
+
+        @Override
+        public Board execute() {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
-        
     }
     
     public static final class CaptureMove extends Move {
@@ -31,5 +37,14 @@ public abstract class Move {
             super(board, mp, dc);
             capturedPiece = cp;
         }
+
+        @Override
+        public Board execute() {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+    }
+    
+    public int getDestCoordinate() {
+        return destCoordinate;
     }
 }

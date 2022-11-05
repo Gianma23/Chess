@@ -1,5 +1,7 @@
 package it.unipi.chess.board;
 
+import static java.lang.Math.floor;
+
 public class BoardUtils {
     
     public static final int NUM_TILES = 64;
@@ -36,5 +38,9 @@ public class BoardUtils {
     
     public static boolean isEighthColumn (final int coord) {
         return coord % NUM_TILES_ROW == 7;
+    }
+    
+    public static boolean isSecondRow (final int coord) {
+        return floor(coord / NUM_TILES_ROW) == 1;
     }
 }

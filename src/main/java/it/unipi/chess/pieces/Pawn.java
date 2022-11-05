@@ -5,6 +5,7 @@ import it.unipi.chess.Color;
 import it.unipi.chess.Move;
 import it.unipi.chess.board.BoardUtils;
 import it.unipi.chess.board.Tile;
+import it.unipi.chess.board.player.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,15 +13,18 @@ import java.util.List;
 
 public class Pawn extends Piece {
     
-    private final static PieceType type = PieceType.PAWN;  
     private static final int[] CANDIDATE_MOVE_COORD = {7, 8, 9};
+    private final int direction;
     
     public Pawn(final int pos, final Color col) {
-        super(pos, col);
+        super(PieceType.PAWN, pos, col);
+        direction = setDirection(pos);
     }
     
-    public PieceType getType() {
-        return type;
+    private int setDirection(int pos) {
+        if(BoardUtils.isSecondRow(pos))
+            return 1;
+        return -1;
     }
     
     @Override
@@ -29,7 +33,7 @@ public class Pawn extends Piece {
         List<Move> possibleMoves = new ArrayList<>();
         
         for (final int coordOffset : CANDIDATE_MOVE_COORD) {
-            candidateMove = position + coordOffset ;//* Player.getDirection();
+            candidateMove = position + coordOffset * direction;
             
             if (BoardUtils.isValidTile(candidateMove)) {     
                 
@@ -41,15 +45,15 @@ public class Pawn extends Piece {
                     possibleMoves.add(new Move.NoCaptureMove(board, this, candidateMove));
                     
                     // jump move
-                    if (coordOffset + 8 /** Player.getDirection() */== 16 && !validMoveTile.isOccupied() && isFirstMove())
+                    if (coordOffset + 8 * direction == 16 && !validMoveTile.isOccupied() && isFirstMove())
                         possibleMoves.add(new Move.NoCaptureMove(board, this, candidateMove));
                 } 
                 // diagonal capture move
-                else if (!validMoveTile.isOccupied() && 
+                else if (validMoveTile.isOccupied() && 
                          !isColumnExcluded(candidateMove, coordOffset)) {
                     
                     final Piece pieceAtDest = validMoveTile.getPiece();
-                    final Color pieceAtDestColor = pieceAtDest.getPieceColor();
+                    final Color pieceAtDestColor = pieceAtDest.getColor();
 
                     if(this.color != pieceAtDestColor) {
                         //TODO: promozione pezzo

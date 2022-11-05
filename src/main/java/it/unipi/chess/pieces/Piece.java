@@ -27,24 +27,29 @@ public abstract class Piece {
         }
     }
     
+    protected final PieceType type;
     protected final int position;
     protected final Color color;
     protected final boolean isFirstMove;
     
-    Piece(final int pos, final Color col) {
+    Piece(final PieceType type, final int pos, final Color col) {
+        this.type = type;
         position = pos;
         color = col;
         isFirstMove = false;
     }
     
     public abstract List<Move> getPossibleMoves(final Board board);
-    public abstract PieceType getType();
     
-    public Color getPieceColor() {
+    public PieceType getType() {
+        return type;
+    }
+    
+    public Color getColor() {
         return color;
     }
 
-    public int getPiecePosition() {
+    public int getPosition() {
         return position;
     }
     
