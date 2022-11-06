@@ -2,23 +2,22 @@ package it.unipi.chess.pieces;
 
 import it.unipi.chess.board.Board;
 import it.unipi.chess.Color;
-import it.unipi.chess.Move;
+import it.unipi.chess.Move.Move;
 import it.unipi.chess.board.BoardUtils;
-import it.unipi.chess.board.Tile;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Bishop extends Piece {
-    
-    private final static PieceType type = PieceType.BISHOP;  
+     
     private final static int[] CANDIDATE_MOVE_VECTOR = {-9, -7, 7, 9};
     
     public Bishop(final int pos, final Color col) {
         super(PieceType.BISHOP, pos, col);
     }
     
+    @Override
     public PieceType getType() {
         return type;
     }
@@ -35,18 +34,16 @@ public class Bishop extends Piece {
                 if(isColumnExcluded(candidateMove, coordOffset))
                     break;
                 
-                final Tile validMoveTile = board.getTile(candidateMove);                
-                if (!validMoveTile.isOccupied()) {
+                final Piece pieceAtDest = board.getPiece(candidateMove);               
+                if (pieceAtDest == null) {
                     possibleMoves.add(new Move.NoCaptureMove(board, this, candidateMove));
                 } else {
-                    final Piece pieceAtDest = validMoveTile.getPiece();
-                    final Color pieceAtDestColor = pieceAtDest.getColor();
+                    final Color pieceAtDestColor = pieceAtDest.getColor(); 
                     
                     if(this.color != pieceAtDestColor)
                         possibleMoves.add(new Move.CaptureMove(board, this, candidateMove, pieceAtDest));
                     break;  // cannot go over occupied tile
-                }
-                
+                }         
                 candidateMove += coordOffset;  // continue on vector
             }
         }
@@ -65,4 +62,8 @@ public class Bishop extends Piece {
         return BoardUtils.isEighthColumn(candidateMove) && (coordOffset == -7 || coordOffset == 9);
     }
 
+    @Override
+    public Piece movePiece(Move move) {
+        return new Bishop(move.getDestCoordinate(), move.getMovedPiece().getColor());
+    }
 }

@@ -1,5 +1,5 @@
 package it.unipi.chess.board;
-
+/*
 import it.unipi.chess.pieces.*;
 public abstract class Tile {
     
@@ -63,3 +63,4 @@ public abstract class Tile {
         }
     }
 }
+*/

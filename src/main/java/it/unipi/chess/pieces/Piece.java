@@ -1,31 +1,11 @@
 package it.unipi.chess.pieces;
 
+import it.unipi.chess.Move.Move;
 import it.unipi.chess.board.Board;
 import it.unipi.chess.*;
 import java.util.*;
 
 public abstract class Piece {
-         
-    public enum PieceType {
-        
-        PAWN("P"),
-        KNIGHT("N"),
-        BISHOP("B"),
-        ROOK("R"),
-        QUEEN("Q"),
-        KING("K");
-        
-        private String pieceName;
-        
-        PieceType(final String pn) {
-            pieceName = pn;
-        }
-        
-        @Override
-        public String toString() {
-            return pieceName;
-        }
-    }
     
     protected final PieceType type;
     protected final int position;
@@ -40,6 +20,34 @@ public abstract class Piece {
     }
     
     public abstract List<Move> getPossibleMoves(final Board board);
+    public abstract Piece movePiece(Move move);
+    
+    @Override
+    public boolean equals(final Object o) {
+        if(this == o)
+            return true;
+        if(o == null || o.getClass() != getClass())
+            return false;
+        
+        final Piece oPiece = (Piece) o;
+        return color == oPiece.getColor() && type == oPiece.getType() && 
+               position == oPiece.position && isFirstMove == oPiece.isFirstMove;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = type.hashCode();
+        hash = 71 * hash + position;
+        hash = 71 * hash + color.hashCode();
+        hash = 71 * hash + (isFirstMove? 1 : 0);
+        return hash;
+    }
+    
+    @Override
+    public String toString() {
+        return getType().toString();
+    }
+
     
     public PieceType getType() {
         return type;

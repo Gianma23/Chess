@@ -1,15 +1,10 @@
-package it.unipi.chess.board.player;
+package it.unipi.chess.Move;
 
-import it.unipi.chess.Move;
+import it.unipi.chess.Move.Move;
 import it.unipi.chess.board.Board;
 
 public class MoveTransition {
     
-    public enum MoveStatus {
-        DONE,
-        ILLEGAL,
-        CHECKED
-    }
     
     private final Move move;
     private final Board newBoard;

@@ -1,10 +1,9 @@
 package it.unipi.chess.pieces;
 
 import it.unipi.chess.Color;
-import it.unipi.chess.Move;
+import it.unipi.chess.Move.Move;
 import it.unipi.chess.board.Board;
 import it.unipi.chess.board.BoardUtils;
-import it.unipi.chess.board.Tile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,12 +36,11 @@ public class King extends Piece {
             if (BoardUtils.isValidTile(candidateMove) &&
                 !isColumnExcluded(candidateMove, coordOffset)) { 
                                 
-                final Tile validMoveTile = board.getTile(candidateMove); 
+                final Piece pieceAtDest = board.getPiece(candidateMove); 
                 
-                if (!validMoveTile.isOccupied()) {
+                if (pieceAtDest == null) {
                     possibleMoves.add(new Move.NoCaptureMove(board, this, candidateMove));
                 } else {
-                    final Piece pieceAtDest = validMoveTile.getPiece();
                     final Color pieceAtDestColor = pieceAtDest.getColor();
                     
                     if(this.color != pieceAtDestColor)
@@ -65,4 +63,8 @@ public class King extends Piece {
         return BoardUtils.isEighthColumn(candidateMove) && (coordOffset == -7 || coordOffset == 1 || coordOffset == 9);
     }
     
+    @Override
+    public Piece movePiece(Move move) {
+        return new King(move.getDestCoordinate(), move.getMovedPiece().getColor());
+    }
 }

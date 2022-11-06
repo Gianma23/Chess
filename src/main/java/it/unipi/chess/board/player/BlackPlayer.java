@@ -5,7 +5,7 @@
 package it.unipi.chess.board.player;
 
 import it.unipi.chess.Color;
-import it.unipi.chess.Move;
+import it.unipi.chess.Move.Move;
 import it.unipi.chess.board.Board;
 import it.unipi.chess.pieces.Piece;
 import java.util.List;
@@ -16,14 +16,9 @@ import java.util.List;
  */
 public class BlackPlayer extends Player {
     
-    public BlackPlayer(Board board, List<Move> possibleMoves,
-           List<Move> opponentMoves) {
-        super(board, possibleMoves, opponentMoves);
-    }
-
-    @Override
-    public List<Piece> getPieces() {
-        return board.getBlackSet();
+    public BlackPlayer(final Board board, final List<Move> possibleMoves,
+                       final List<Move> opponentMoves, final boolean isBottom) {
+        super(board, possibleMoves, opponentMoves, isBottom);
     }
 
     @Override
@@ -34,5 +29,10 @@ public class BlackPlayer extends Player {
     @Override
     public Player getOpponent() {
         return board.getWhitePlayer();
+    }
+    
+    @Override
+    public List<Piece> getPieces() {
+        return board.getBlackSet();
     }
 }

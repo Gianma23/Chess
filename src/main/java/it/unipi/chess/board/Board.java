@@ -1,94 +1,85 @@
 package it.unipi.chess.board;
 
 import it.unipi.chess.Color;
-import it.unipi.chess.Move;
+import it.unipi.chess.Move.Move;
 import it.unipi.chess.board.player.*;
 import it.unipi.chess.pieces.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public final class Board {
     
     private final Map<Integer, Piece> boardConfig;
-    private final List<Tile> gameBoard;
     private final List<Piece> whiteSet;
     private final List<Piece> blackSet;
     private final WhitePlayer whitePlayer;
     private final BlackPlayer blackPlayer;
     private final Color nextMoveColor;
+    private static final Board START_BOARD = setStartBoard();
     
-    public Board() {
-        boardConfig = new HashMap<>();
-        setBoardConfig();
-        gameBoard = setGameBoard();
-        whiteSet = getPieceSet(Color.WHITE);
-        blackSet = getPieceSet(Color.BLACK);
+    private Board(final BoardBuilder builder) {
+        this.boardConfig = Collections.unmodifiableMap(builder.boardConfig);
         
+        whiteSet = getPieceSet(Color.WHITE);
+        blackSet = getPieceSet(Color.BLACK);        
         final List<Move> whitePossibleMoves = getSetPossibleMoves(whiteSet);
         final List<Move> blackPossibleMoves = getSetPossibleMoves(blackSet);
-        whitePlayer = new WhitePlayer(this, whitePossibleMoves, blackPossibleMoves);
-        blackPlayer = new BlackPlayer(this, blackPossibleMoves, whitePossibleMoves);
-        nextMoveColor = Color.WHITE;
+        whitePlayer = new WhitePlayer(this, whitePossibleMoves, blackPossibleMoves, true);
+        blackPlayer = new BlackPlayer(this, blackPossibleMoves, whitePossibleMoves, false);
+        
+        this.nextMoveColor = builder.nextMoveColor;
     }
      
-    private void setBoardConfig() {
+    private static Board setStartBoard() {
+        final BoardBuilder startBoard = new BoardBuilder();
         // Black Set
-        setPiece(new Rook(0, Color.BLACK));
-        setPiece(new Knight(1, Color.BLACK));
-        setPiece(new Bishop(2, Color.BLACK));
-        setPiece(new Queen(3, Color.BLACK));
-        setPiece(new King(4, Color.BLACK));
-        setPiece(new Bishop(5, Color.BLACK));
-        setPiece(new Knight(6, Color.BLACK));
-        setPiece(new Rook(7, Color.BLACK));
-        setPiece(new Pawn(8, Color.BLACK));
-        setPiece(new Pawn(9, Color.BLACK));
-        setPiece(new Pawn(10, Color.BLACK));
-        setPiece(new Pawn(11, Color.BLACK));
-        setPiece(new Pawn(12, Color.BLACK));
-        setPiece(new Pawn(13, Color.BLACK));
-        setPiece(new Pawn(14, Color.BLACK));
-        setPiece(new Pawn(15, Color.BLACK));
+        startBoard.setPiece(new Rook(0, Color.BLACK));
+        startBoard.setPiece(new Knight(1, Color.BLACK));
+        startBoard.setPiece(new Bishop(2, Color.BLACK));
+        startBoard.setPiece(new Queen(3, Color.BLACK));
+        startBoard.setPiece(new King(4, Color.BLACK));
+        startBoard.setPiece(new Bishop(5, Color.BLACK));
+        startBoard.setPiece(new Knight(6, Color.BLACK));
+        startBoard.setPiece(new Rook(7, Color.BLACK));
+        startBoard.setPiece(new Pawn(8, Color.BLACK));
+        startBoard.setPiece(new Pawn(9, Color.BLACK));
+        startBoard.setPiece(new Pawn(10, Color.BLACK));
+        startBoard.setPiece(new Pawn(11, Color.BLACK));
+        startBoard.setPiece(new Pawn(12, Color.BLACK));
+        startBoard.setPiece(new Pawn(13, Color.BLACK));
+        startBoard.setPiece(new Pawn(14, Color.BLACK));
+        startBoard.setPiece(new Pawn(15, Color.BLACK));
         // White Set
-        setPiece(new Pawn(48, Color.WHITE));
-        setPiece(new Pawn(49, Color.WHITE));
-        setPiece(new Pawn(50, Color.WHITE));
-        setPiece(new Pawn(51, Color.WHITE));
-        setPiece(new Pawn(52, Color.WHITE));
-        setPiece(new Pawn(53, Color.WHITE));
-        setPiece(new Pawn(54, Color.WHITE));
-        setPiece(new Pawn(55, Color.WHITE));
-        setPiece(new Rook(56, Color.WHITE));
-        setPiece(new Knight(57, Color.WHITE));
-        setPiece(new Bishop(58, Color.WHITE));
-        setPiece(new Queen(59, Color.WHITE));
-        setPiece(new King(60, Color.WHITE));
-        setPiece(new Bishop(61, Color.WHITE));
-        setPiece(new Knight(62, Color.WHITE));
-        setPiece(new Rook(63, Color.WHITE));
-    }
-    
-    private List<Tile> setGameBoard() {
-        final Tile[] tiles = new Tile[BoardUtils.NUM_TILES];
-        for(int i = 0; i < BoardUtils.NUM_TILES; i++) 
-            tiles[i] = Tile.createTile(i, boardConfig.get(i));
+        startBoard.setPiece(new Pawn(48, Color.WHITE));
+        startBoard.setPiece(new Pawn(49, Color.WHITE));
+        startBoard.setPiece(new Pawn(50, Color.WHITE));
+        startBoard.setPiece(new Pawn(51, Color.WHITE));
+        startBoard.setPiece(new Pawn(52, Color.WHITE));
+        startBoard.setPiece(new Pawn(53, Color.WHITE));
+        startBoard.setPiece(new Pawn(54, Color.WHITE));
+        startBoard.setPiece(new Pawn(55, Color.WHITE));
+        startBoard.setPiece(new Rook(56, Color.WHITE));
+        startBoard.setPiece(new Knight(57, Color.WHITE));
+        startBoard.setPiece(new Bishop(58, Color.WHITE));
+        startBoard.setPiece(new Queen(59, Color.WHITE));
+        startBoard.setPiece(new King(60, Color.WHITE));
+        startBoard.setPiece(new Bishop(61, Color.WHITE));
+        startBoard.setPiece(new Knight(62, Color.WHITE));
+        startBoard.setPiece(new Rook(63, Color.WHITE));
         
-        return Collections.unmodifiableList(Arrays.asList(tiles));
+        startBoard.setNextMoveColor(Color.WHITE);
+        return startBoard.build();
     }
     
     private List<Piece> getPieceSet(final Color color) {
-        final List<Piece> activePieces = new ArrayList<>();
-        
-        for(final Tile tile : gameBoard) 
-            if(tile.isOccupied() && tile.getPiece().getColor() == color)
-                activePieces.add(tile.getPiece());
-            
-        return Collections.unmodifiableList(activePieces);
+        return boardConfig.values().stream()
+               .filter(piece -> piece.getColor() == color)
+               .collect(Collectors.toList());
     }
     
     private List<Move> getSetPossibleMoves(final List<Piece> PieceSet) {
@@ -99,12 +90,8 @@ public final class Board {
         
         return Collections.unmodifiableList(possibleMoves);
     }
-        
-    private void setPiece(final Piece piece) {
-        boardConfig.put(piece.getPosition(), piece);
-    }
 
-    private Color getNextMoveColor(final Color nmc) {
+    private Color getNextMoveColor() {
         return nextMoveColor;
     }
     
@@ -128,19 +115,50 @@ public final class Board {
         return nextMoveColor == Color.WHITE ? whitePlayer : blackPlayer;
     }
     
-    public Tile getTile(final int coord) {
-        return gameBoard.get(coord);
+    public static Board getStartBoard() {
+        return START_BOARD;
+    }
+    
+    public Piece getPiece(final int coord) {
+        return boardConfig.get(coord);
     }  
     
     @Override 
     public String toString() {
         final StringBuilder builder = new StringBuilder();
         for(int i = 0; i < BoardUtils.NUM_TILES; i++) {
-            final String tileText = gameBoard.get(i).toString();
-            builder.append(String.format("%3s", tileText));
+            final String tileText = boardConfig.get(i) == null ? "-" : boardConfig.get(i).toString();
+                builder.append(String.format("%3s", tileText));
+                
             if((i+1) % BoardUtils.NUM_TILES_ROW == 0)
                 builder.append("\n");
         }
         return builder.toString();
+    }
+    /*==================================================*/
+    /*              Builder for Board Class             */
+    /*==================================================*/
+    public static class BoardBuilder {
+        
+        Map<Integer, Piece> boardConfig;
+        Color nextMoveColor;
+        
+        public BoardBuilder() {
+            boardConfig = new HashMap<>(32, 1.0f);
+        }
+        
+        public BoardBuilder setPiece(final Piece piece) {
+            boardConfig.put(piece.getPosition(), piece);
+            return this;
+        }
+        
+        public BoardBuilder setNextMoveColor(final Color nextMovecolor) {
+            this.nextMoveColor = nextMovecolor;
+            return this;
+        }
+        
+        public Board build() {
+            return new Board(this);
+        }       
     }
 }

@@ -2,9 +2,8 @@ package it.unipi.chess.pieces;
 
 import it.unipi.chess.board.Board;
 import it.unipi.chess.Color;
-import it.unipi.chess.Move;
+import it.unipi.chess.Move.Move;
 import it.unipi.chess.board.BoardUtils;
-import it.unipi.chess.board.Tile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,12 +32,11 @@ public class Knight extends Piece {
             if (BoardUtils.isValidTile(candidateMove) && 
                 !isColumnExcluded(candidateMove, coordOffset)) {
                 
-                final Tile validMoveTile = board.getTile(candidateMove); 
+                final Piece pieceAtDest = board.getPiece(candidateMove); 
                 
-                if (!validMoveTile.isOccupied()) {
+                if (pieceAtDest == null) {
                     possibleMoves.add(new Move.NoCaptureMove(board, this, candidateMove));
                 } else {
-                    final Piece pieceAtDest = validMoveTile.getPiece();
                     final Color pieceAtDestColor = pieceAtDest.getColor();
                     
                     if(this.color != pieceAtDestColor)
@@ -70,6 +68,11 @@ public class Knight extends Piece {
     private static boolean isEighthColumnExcluded(final int candidateMove, final int coordOffset) {
         return BoardUtils.isEighthColumn(candidateMove) &&
                 (coordOffset == -15 || coordOffset == -6 || coordOffset == 10 || coordOffset == 17);
+    }
+
+    @Override
+    public Piece movePiece(Move move) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

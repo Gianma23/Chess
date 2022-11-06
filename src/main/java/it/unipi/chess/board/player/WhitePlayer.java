@@ -1,22 +1,16 @@
 package it.unipi.chess.board.player;
 
 import it.unipi.chess.Color;
-import it.unipi.chess.Move;
+import it.unipi.chess.Move.Move;
 import it.unipi.chess.board.Board;
 import it.unipi.chess.pieces.*;
-import it.unipi.chess.pieces.Piece.PieceType;
 import java.util.List;
 
 public class WhitePlayer extends Player {
 
-    public WhitePlayer(Board board, List<Move> possibleMoves,
-           List<Move> opponentMoves) {
-        super(board, possibleMoves, opponentMoves);
-    }
-        
-    @Override
-    public List<Piece> getPieces() {
-        return board.getWhiteSet();
+    public WhitePlayer(final Board board, final List<Move> possibleMoves,
+                       final List<Move> opponentMoves, final boolean isBottom) {
+        super(board, possibleMoves, opponentMoves, isBottom);
     }
 
     @Override
@@ -27,5 +21,10 @@ public class WhitePlayer extends Player {
     @Override
     public Player getOpponent() {
         return board.getBlackPlayer();
+    }
+    
+    @Override
+    public List<Piece> getPieces() {
+        return board.getWhiteSet();
     }
 }

@@ -2,10 +2,8 @@ package it.unipi.chess.pieces;
 
 import it.unipi.chess.board.Board;
 import it.unipi.chess.Color;
-import it.unipi.chess.Move;
+import it.unipi.chess.Move.Move;
 import it.unipi.chess.board.BoardUtils;
-import it.unipi.chess.board.Tile;
-import it.unipi.chess.board.player.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,22 +35,19 @@ public class Pawn extends Piece {
             
             if (BoardUtils.isValidTile(candidateMove)) {     
                 
-                final Tile validMoveTile = board.getTile(candidateMove);                
+                final Piece pieceAtDest = board.getPiece(candidateMove);               
                 
                 // no capture move
-                if (coordOffset == 8 && !validMoveTile.isOccupied()) {
+                if (coordOffset == 8 && pieceAtDest == null) {
                     //TODO: promozione pezzo
                     possibleMoves.add(new Move.NoCaptureMove(board, this, candidateMove));
                     
                     // jump move
-                    if (coordOffset + 8 * direction == 16 && !validMoveTile.isOccupied() && isFirstMove())
+                    if (coordOffset + 8 * direction == 16 && pieceAtDest == null && isFirstMove())
                         possibleMoves.add(new Move.NoCaptureMove(board, this, candidateMove));
                 } 
                 // diagonal capture move
-                else if (validMoveTile.isOccupied() && 
-                         !isColumnExcluded(candidateMove, coordOffset)) {
-                    
-                    final Piece pieceAtDest = validMoveTile.getPiece();
+                else if (pieceAtDest != null && !isColumnExcluded(candidateMove, coordOffset)) {
                     final Color pieceAtDestColor = pieceAtDest.getColor();
 
                     if(this.color != pieceAtDestColor) {
@@ -75,5 +70,10 @@ public class Pawn extends Piece {
     
     private static boolean isEighthColumnExcluded(final int candidateMove, final int coordOffset) {
         return BoardUtils.isEighthColumn(candidateMove) && (coordOffset == -7 || coordOffset == 9);
+    }
+
+    @Override
+    public Piece movePiece(Move move) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
